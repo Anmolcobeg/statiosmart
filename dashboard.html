@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>StatioSmart — Dashboard</title>
+  <link rel="icon" type="image/svg+xml" href="favicon.svg" />
+  <link rel="stylesheet" href="style.css"/>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet"/>
+  <link rel="stylesheet" href="font-awesome-local.css"/>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+</head>
+<body class="app-body">
+
+  <!-- Sidebar -->
+  <aside class="sidebar" id="sidebar">
+    <div class="sidebar-brand">
+      <div class="brand-icon sm"><i class="fas fa-pen-nib"></i></div>
+      <span class="brand-name-sm">StatioSmart</span>
+    </div>
+    <nav class="sidebar-nav">
+      <a href="dashboard.html" class="nav-item active"><i class="fas fa-th-large"></i><span>Dashboard</span></a>
+      <a href="inventory.html" class="nav-item"><i class="fas fa-boxes"></i><span>Inventory</span></a>
+      <a href="sales.html" class="nav-item"><i class="fas fa-receipt"></i><span>Sales</span></a>
+      <a href="credit.html" class="nav-item"><i class="fas fa-credit-card"></i><span>Credit</span></a>
+      <a href="analysis.html" class="nav-item"><i class="fas fa-chart-bar"></i><span>Analysis</span></a>
+    </nav>
+    <div class="sidebar-footer">
+      <div class="user-info" id="user-info">
+        <div class="user-avatar" id="user-avatar">U</div>
+        <div class="user-details">
+          <p class="user-name" id="user-name">Loading...</p>
+          <p class="user-shop" id="user-shop">Shop</p>
+        </div>
+      </div>
+      <button class="btn-logout" onclick="logoutUser()"><i class="fas fa-sign-out-alt"></i></button>
+    </div>
+  </aside>
+
+  <!-- Mobile sidebar overlay -->
+  <div class="sidebar-overlay" onclick="toggleSidebar()"></div>
+
+  <!-- Main Content -->
+  <main class="main-content">
+    <header class="top-bar">
+      <button class="menu-toggle" onclick="toggleSidebar()"><i class="fas fa-bars"></i></button>
+      <div class="top-bar-left">
+        <h2 class="page-title">Dashboard</h2>
+        <p class="page-date" id="today-date"></p>
+      </div>
+      <div class="top-bar-right">
+        <div class="search-box">
+          <i class="fas fa-search"></i>
+          <input type="text" placeholder="Search products..." oninput="quickSearch(this.value)"/>
+        </div>
+        <button class="notif-btn"><i class="fas fa-bell"></i><span class="notif-dot"></span></button>
+      </div>
+    </header>
+
+    <!-- Stats Cards -->
+    <section class="stats-grid">
+      <div class="stat-card accent-green">
+        <div class="stat-icon"><i class="fas fa-indian-rupee-sign"></i></div>
+        <div class="stat-info">
+          <p class="stat-label">Today's Revenue</p>
+          <h3 class="stat-value" id="stat-revenue">₹0</h3>
+          <p class="stat-change positive" id="stat-rev-change"><i class="fas fa-arrow-up"></i> Loading...</p>
+        </div>
+      </div>
+      <div class="stat-card accent-blue">
+        <div class="stat-icon"><i class="fas fa-shopping-cart"></i></div>
+        <div class="stat-info">
+          <p class="stat-label">Orders Today</p>
+          <h3 class="stat-value" id="stat-orders">0</h3>
+          <p class="stat-change positive" id="stat-ord-change"><i class="fas fa-arrow-up"></i> Loading...</p>
+        </div>
+      </div>
+      <div class="stat-card accent-amber">
+        <div class="stat-icon"><i class="fas fa-boxes"></i></div>
+        <div class="stat-info">
+          <p class="stat-label">Total Products</p>
+          <h3 class="stat-value" id="stat-products">0</h3>
+          <p class="stat-change neutral" id="stat-prod-change"><i class="fas fa-minus"></i> In stock</p>
+        </div>
+      </div>
+      <div class="stat-card accent-red">
+        <div class="stat-icon"><i class="fas fa-exclamation-triangle"></i></div>
+        <div class="stat-info">
+          <p class="stat-label">Low Stock Alerts</p>
+          <h3 class="stat-value" id="stat-lowstock">0</h3>
+          <p class="stat-change negative" id="stat-low-change"><i class="fas fa-arrow-down"></i> Need restock</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- Charts Row -->
+    <section class="charts-row">
+      <div class="chart-card wide">
+        <div class="chart-header">
+          <h3>Weekly Sales Overview</h3>
+          <div class="chart-actions">
+            <button class="chip active" onclick="changeWeeklyView('revenue', this)">Revenue</button>
+            <button class="chip" onclick="changeWeeklyView('orders', this)">Orders</button>
+          </div>
+        </div>
+        <canvas id="weeklyChart" height="100"></canvas>
+      </div>
+      <div class="chart-card">
+        <div class="chart-header"><h3>Top Categories</h3></div>
+        <canvas id="categoryChart" height="160"></canvas>
+      </div>
+    </section>
+
+    <!-- Bottom Row -->
+    <section class="bottom-row">
+      <!-- Recent Sales -->
+      <div class="table-card">
+        <div class="card-header">
+          <h3>Recent Sales</h3>
+          <a href="sales.html" class="see-all">See all <i class="fas fa-arrow-right"></i></a>
+        </div>
+        <table class="data-table">
+          <thead>
+            <tr><th>Product</th><th>Qty</th><th>Amount</th><th>Time</th></tr>
+          </thead>
+          <tbody id="recent-sales-body">
+            <tr><td colspan="4" class="empty-row">No sales yet today</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <!-- Low Stock Alert -->
+      <div class="table-card">
+        <div class="card-header">
+          <h3>Low Stock Alerts</h3>
+          <a href="inventory.html" class="see-all">Manage <i class="fas fa-arrow-right"></i></a>
+        </div>
+        <div id="low-stock-list" class="stock-list">
+          <p class="empty-row">All items are well-stocked ✓</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- AI Tip Banner -->
+    <div class="ai-tip-banner" id="ai-tip-banner">
+      <div class="ai-tip-icon"><i class="fas fa-robot"></i></div>
+      <div class="ai-tip-content">
+        <p class="ai-tip-label">AI Insight</p>
+        <p class="ai-tip-text" id="ai-tip-text">Loading your personalized business tip...</p>
+      </div>
+      <a href="analysis.html" class="ai-tip-cta">Full Analysis <i class="fas fa-arrow-right"></i></a>
+    </div>
+  </main>
+
+  <script type="module" src="app.js"></script>
+  <script>
+    document.getElementById('today-date').textContent = new Date().toLocaleDateString('en-IN', {weekday:'long', year:'numeric', month:'long', day:'numeric'});
+    function toggleSidebar() {
+      document.getElementById('sidebar').classList.toggle('open');
+    }
+    function changeWeeklyView(type, btn) {
+      document.querySelectorAll('.chip').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      if (window.weeklyChartInstance) updateWeeklyChart(type);
+    }
+  </script>
+</body>
+</html>

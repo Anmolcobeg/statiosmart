@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>StatioSmart — Inventory</title>
+  <link rel="icon" type="image/svg+xml" href="favicon.svg" />
+  <link rel="stylesheet" href="style.css"/>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet"/>
+  <link rel="stylesheet" href="font-awesome-local.css"/>
+</head>
+<body class="app-body">
+
+  <aside class="sidebar" id="sidebar">
+    <div class="sidebar-brand">
+      <div class="brand-icon sm"><i class="fas fa-pen-nib"></i></div>
+      <span class="brand-name-sm">StatioSmart</span>
+    </div>
+    <nav class="sidebar-nav">
+      <a href="dashboard.html" class="nav-item"><i class="fas fa-th-large"></i><span>Dashboard</span></a>
+      <a href="inventory.html" class="nav-item active"><i class="fas fa-boxes"></i><span>Inventory</span></a>
+      <a href="sales.html" class="nav-item"><i class="fas fa-receipt"></i><span>Sales</span></a>
+      <a href="credit.html" class="nav-item"><i class="fas fa-credit-card"></i><span>Credit</span></a>
+      <a href="analysis.html" class="nav-item"><i class="fas fa-chart-bar"></i><span>Analysis</span></a>
+    </nav>
+    <div class="sidebar-footer">
+      <div class="user-info">
+        <div class="user-avatar" id="user-avatar">U</div>
+        <div class="user-details">
+          <p class="user-name" id="user-name">Loading...</p>
+          <p class="user-shop" id="user-shop">Shop</p>
+        </div>
+      </div>
+      <button class="btn-logout" onclick="logoutUser()"><i class="fas fa-sign-out-alt"></i></button>
+    </div>
+  </aside>
+
+  <!-- Mobile sidebar overlay -->
+  <div class="sidebar-overlay" onclick="toggleSidebar()"></div>
+
+  <main class="main-content">
+    <header class="top-bar">
+      <button class="menu-toggle" onclick="toggleSidebar()"><i class="fas fa-bars"></i></button>
+      <div class="top-bar-left">
+        <h2 class="page-title">Inventory</h2>
+        <p class="page-subtitle">Manage your products and stock</p>
+      </div>
+      <div class="top-bar-right">
+        <button class="btn-primary sm" onclick="openAddProduct()">
+          <i class="fas fa-plus"></i> Add Product
+        </button>
+      </div>
+    </header>
+
+    <!-- Filters & Search -->
+    <div class="filter-bar">
+      <div class="search-box">
+        <i class="fas fa-search"></i>
+        <input type="text" placeholder="Search products..." id="inv-search" oninput="filterInventory()"/>
+      </div>
+      <select class="filter-select" id="cat-filter" onchange="filterInventory()">
+        <option value="">All Categories</option>
+        <option value="Pens & Pencils">Pens & Pencils</option>
+        <option value="Notebooks">Notebooks</option>
+        <option value="Art Supplies">Art Supplies</option>
+        <option value="Office Supplies">Office Supplies</option>
+        <option value="Biscuits & Snacks">Biscuits & Snacks</option>
+        <option value="Other">Other</option>
+      </select>
+      <select class="filter-select" id="stock-filter" onchange="filterInventory()">
+        <option value="">All Stock</option>
+        <option value="low">Low Stock</option>
+        <option value="out">Out of Stock</option>
+        <option value="ok">In Stock</option>
+      </select>
+      <div class="item-count"><span id="item-count-text">0 items</span></div>
+    </div>
+
+    <!-- Inventory Table -->
+    <div class="table-card full">
+      <table class="data-table inv-table">
+        <thead>
+          <tr>
+            <th>Product</th>
+            <th>Category</th>
+            <th>Buy Price</th>
+            <th>Sell Price</th>
+            <th>Stock</th>
+            <th>Status</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody id="inventory-body">
+          <tr><td colspan="7" class="empty-row"><i class="fas fa-spinner fa-spin"></i> Loading inventory...</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </main>
+
+  <!-- Add/Edit Product Modal -->
+  <div class="modal-overlay hidden" id="product-modal">
+    <div class="modal">
+      <div class="modal-header">
+        <h3 id="modal-title">Add Product</h3>
+        <button class="modal-close" onclick="closeModal('product-modal')"><i class="fas fa-times"></i></button>
+      </div>
+      <form id="product-form" onsubmit="saveProduct(event)">
+        <div class="form-grid">
+          <div class="input-group">
+            <i class="fas fa-tag"></i>
+            <input type="text" id="p-name" placeholder="Product name" required/>
+          </div>
+          <div class="input-group">
+            <i class="fas fa-layer-group"></i>
+            <select id="p-category" required>
+              <option value="">Select category</option>
+              <option>Pens & Pencils</option>
+              <option>Notebooks</option>
+              <option>Art Supplies</option>
+              <option>Office Supplies</option>
+              <option>Biscuits & Snacks</option>
+              <option>Other</option>
+            </select>
+          </div>
+          <div class="input-group">
+            <i class="fas fa-indian-rupee-sign"></i>
+            <input type="number" id="p-buy-price" placeholder="Buy price (₹)" required min="0" step="0.01"/>
+          </div>
+          <div class="input-group">
+            <i class="fas fa-indian-rupee-sign"></i>
+            <input type="number" id="p-sell-price" placeholder="Sell price (₹)" required min="0" step="0.01"/>
+          </div>
+          <div class="input-group">
+            <i class="fas fa-cubes"></i>
+            <input type="number" id="p-stock" placeholder="Current stock (units)" required min="0"/>
+          </div>
+          <div class="input-group">
+            <i class="fas fa-exclamation-circle"></i>
+            <input type="number" id="p-low-threshold" placeholder="Low stock alert at (units)" min="1" value="5"/>
+          </div>
+          <div class="input-group full-width">
+            <i class="fas fa-align-left"></i>
+            <input type="text" id="p-desc" placeholder="Description (optional)"/>
+          </div>
+        </div>
+        <input type="hidden" id="p-id"/>
+        <div class="modal-footer">
+          <button type="button" class="btn-secondary" onclick="closeModal('product-modal')">Cancel</button>
+          <button type="submit" class="btn-primary">Save Product</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Delete Confirm Modal -->
+  <div class="modal-overlay hidden" id="delete-modal">
+    <div class="modal sm-modal">
+      <div class="modal-header">
+        <h3>Confirm Delete</h3>
+        <button class="modal-close" onclick="closeModal('delete-modal')"><i class="fas fa-times"></i></button>
+      </div>
+      <p>Are you sure you want to delete <strong id="delete-product-name"></strong>? This cannot be undone.</p>
+      <div class="modal-footer">
+        <button class="btn-secondary" onclick="closeModal('delete-modal')">Cancel</button>
+        <button class="btn-danger" onclick="confirmDelete()">Delete</button>
+      </div>
+    </div>
+  </div>
+
+  <script type="module" src="app.js"></script>
+  <script>
+    function toggleSidebar() {
+      document.getElementById('sidebar').classList.toggle('open');
+    }
+  </script>
+</body>
+</html>

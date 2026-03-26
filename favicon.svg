@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" width="32" height="32">
+  <defs>
+    <style>
+      .pen { fill: #6c8fff; }
+      .nib { fill: #2a3441; }
+    </style>
+  </defs>
+  <path class="pen" d="M8 4h16v8l-8 16-8-16V4z"/>
+  <path class="nib" d="M16 28l-2-4h4l-2 4z"/>
+  <circle class="nib" cx="16" cy="8" r="2"/>
+</svg>

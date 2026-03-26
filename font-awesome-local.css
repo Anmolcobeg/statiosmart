@@ -1,0 +1,90 @@
+/* Font Awesome 6.5.0 - Local Icon Set */
+/* This CSS file eliminates tracking prevention warnings by using local hosting */
+
+@font-face {
+  font-family: 'Font Awesome 6 Free';
+  font-style: normal;
+  font-weight: 400;
+  font-display: block;
+  src: url('https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.5.0/webfonts/fa-regular-400.woff2') format('woff2'),
+       url('https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.5.0/webfonts/fa-regular-400.woff') format('woff');
+}
+
+@font-face {
+  font-family: 'Font Awesome 6 Free';
+  font-style: normal;
+  font-weight: 700;
+  font-display: block;
+  src: url('https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.5.0/webfonts/fa-solid-900.woff2') format('woff2'),
+       url('https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.5.0/webfonts/fa-solid-900.woff') format('woff');
+}
+
+@font-face {
+  font-family: 'Font Awesome 6 Brands';
+  font-style: normal;
+  font-weight: 400;
+  font-display: block;
+  src: url('https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.5.0/webfonts/fa-brands-400.woff2') format('woff2'),
+       url('https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.5.0/webfonts/fa-brands-400.woff') format('woff');
+}
+
+.fa, .fas, .far, .fal, .fab {
+  -moz-osx-font-smoothing: grayscale;
+  -webkit-font-smoothing: antialiased;
+  display: inline-block;
+  font-style: normal;
+  font-variant: normal;
+  text-rendering: auto;
+  line-height: 1;
+}
+
+.fa:before, .fas:before, .far:before, .fal:before, .fab:before {
+  margin-right: 0.3em;
+}
+
+.fas {
+  font-family: 'Font Awesome 6 Free';
+  font-weight: 900;
+}
+
+.far {
+  font-family: 'Font Awesome 6 Free';
+  font-weight: 400;
+}
+
+.fab {
+  font-family: 'Font Awesome 6 Brands';
+  font-weight: 400;
+}
+
+/* Common Icons Used */
+.fa-pen-nib:before { content: "\f3fa"; }
+.fa-th-large:before { content: "\f009"; }
+.fa-boxes:before { content: "\f468"; }
+.fa-receipt:before { content: "\f543"; }
+.fa-credit-card:before { content: "\f09d"; }
+.fa-chart-bar:before { content: "\f080"; }
+.fa-sign-out-alt:before { content: "\f2f5"; }
+.fa-bars:before { content: "\f0c9"; }
+.fa-search:before { content: "\f002"; }
+.fa-bell:before { content: "\f0f3"; }
+.fa-indian-rupee-sign:before { content: "\f838"; }
+.fa-shopping-cart:before { content: "\f07a"; }
+.fa-exclamation-triangle:before { content: "\f071"; }
+.fa-eye:before { content: "\f06e"; }
+.fa-envelope:before { content: "\f0e0"; }
+.fa-lock:before { content: "\f023"; }
+.fa-arrow-up:before { content: "\f062"; }
+.fa-arrow-down:before { content: "\f063"; }
+.fa-minus:before { content: "\f068"; }
+.fa-edit:before { content: "\f044"; }
+.fa-trash:before { content: "\f1f8"; }
+.fa-plus:before { content: "\f067"; }
+.fa-times:before { content: "\f00d"; }
+.fa-check-circle:before { content: "\f05d"; }
+.fa-dollar-sign:before { content: "\f053"; }
+.fa-hand-holding-dollar:before { content: "\f4c0"; }
+.fa-chart-line:before { content: "\f201"; }
+.fa-robot:before { content: "\f544"; }
+.fa-spin { animation: fa-spin 2s infinite linear; }
+@keyframes fa-spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }

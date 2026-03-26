@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>StatioSmart — Sales</title>
+  <link rel="icon" type="image/svg+xml" href="favicon.svg" />
+  <link rel="stylesheet" href="style.css"/>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet"/>
+  <link rel="stylesheet" href="font-awesome-local.css"/>
+</head>
+<body class="app-body">
+
+  <aside class="sidebar" id="sidebar">
+    <div class="sidebar-brand">
+      <div class="brand-icon sm"><i class="fas fa-pen-nib"></i></div>
+      <span class="brand-name-sm">StatioSmart</span>
+    </div>
+    <nav class="sidebar-nav">
+      <a href="dashboard.html" class="nav-item"><i class="fas fa-th-large"></i><span>Dashboard</span></a>
+      <a href="inventory.html" class="nav-item"><i class="fas fa-boxes"></i><span>Inventory</span></a>
+      <a href="sales.html" class="nav-item active"><i class="fas fa-receipt"></i><span>Sales</span></a>
+      <a href="credit.html" class="nav-item"><i class="fas fa-credit-card"></i><span>Credit</span></a>
+      <a href="analysis.html" class="nav-item"><i class="fas fa-chart-bar"></i><span>Analysis</span></a>
+    </nav>
+    <div class="sidebar-footer">
+      <div class="user-info">
+        <div class="user-avatar" id="user-avatar">U</div>
+        <div class="user-details">
+          <p class="user-name" id="user-name">Loading...</p>
+          <p class="user-shop" id="user-shop">Shop</p>
+        </div>
+      </div>
+      <button class="btn-logout" onclick="logoutUser()"><i class="fas fa-sign-out-alt"></i></button>
+    </div>
+  </aside>
+
+  <!-- Mobile sidebar overlay -->
+  <div class="sidebar-overlay" onclick="toggleSidebar()"></div>
+
+  <main class="main-content">
+    <header class="top-bar">
+      <button class="menu-toggle" onclick="toggleSidebar()"><i class="fas fa-bars"></i></button>
+      <div class="top-bar-left">
+        <h2 class="page-title">Sales</h2>
+        <p class="page-subtitle">Record and review transactions</p>
+      </div>
+      <div class="top-bar-right">
+        <button class="btn-primary sm" onclick="openNewSale()">
+          <i class="fas fa-plus"></i> New Sale
+        </button>
+      </div>
+    </header>
+
+    <!-- Sale Summary Cards -->
+    <section class="stats-grid">
+      <div class="stat-card accent-green">
+        <div class="stat-icon"><i class="fas fa-indian-rupee-sign"></i></div>
+        <div class="stat-info">
+          <p class="stat-label">Today's Revenue</p>
+          <h3 class="stat-value" id="today-rev">₹0</h3>
+        </div>
+      </div>
+      <div class="stat-card accent-blue">
+        <div class="stat-icon"><i class="fas fa-receipt"></i></div>
+        <div class="stat-info">
+          <p class="stat-label">Today's Orders</p>
+          <h3 class="stat-value" id="today-orders">0</h3>
+        </div>
+      </div>
+      <div class="stat-card accent-amber">
+        <div class="stat-icon"><i class="fas fa-chart-pie"></i></div>
+        <div class="stat-info">
+          <p class="stat-label">This Month</p>
+          <h3 class="stat-value" id="month-rev">₹0</h3>
+        </div>
+      </div>
+      <div class="stat-card accent-purple">
+        <div class="stat-icon"><i class="fas fa-hand-holding-dollar"></i></div>
+        <div class="stat-info">
+          <p class="stat-label">Total Profit</p>
+          <h3 class="stat-value" id="total-profit">₹0</h3>
+        </div>
+      </div>
+    </section>
+
+    <!-- Filters -->
+    <div class="filter-bar">
+      <div class="search-box">
+        <i class="fas fa-search"></i>
+        <input type="text" placeholder="Search by product..." id="sales-search" oninput="filterSales()"/>
+      </div>
+      <input type="date" class="filter-select" id="sales-date-filter" onchange="filterSales()"/>
+      <select class="filter-select" id="sales-cat-filter" onchange="filterSales()">
+        <option value="">All Categories</option>
+        <option>Pens & Pencils</option>
+        <option>Notebooks</option>
+        <option>Art Supplies</option>
+        <option>Office Supplies</option>
+        <option>Biscuits & Snacks</option>
+        <option>Other</option>
+      </select>
+      <button class="btn-secondary sm" onclick="clearFilters()"><i class="fas fa-times"></i> Clear</button>
+    </div>
+
+    <!-- Sales Table -->
+    <div class="table-card full">
+      <table class="data-table">
+        <thead>
+          <tr>
+            <th>Product</th>
+            <th>Category</th>
+            <th>Qty</th>
+            <th>Unit Price</th>
+            <th>Total</th>
+            <th>Profit</th>
+            <th>Date & Time</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody id="sales-body">
+          <tr><td colspan="8" class="empty-row"><i class="fas fa-spinner fa-spin"></i> Loading sales...</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </main>
+
+  <!-- New Sale Modal -->
+  <div class="modal-overlay hidden" id="sale-modal">
+    <div class="modal">
+      <div class="modal-header">
+        <h3>Record New Sale</h3>
+        <button class="modal-close" onclick="closeModal('sale-modal')"><i class="fas fa-times"></i></button>
+      </div>
+      <form id="sale-form" onsubmit="saveSale(event)">
+        <div class="form-grid">
+          <div class="input-group full-width">
+            <i class="fas fa-boxes"></i>
+            <select id="s-product" required onchange="onProductSelect()">
+              <option value="">Select product</option>
+            </select>
+          </div>
+          <div class="input-group">
+            <i class="fas fa-cubes"></i>
+            <input type="number" id="s-qty" placeholder="Quantity" required min="1" oninput="calcTotal()"/>
+          </div>
+          <div class="input-group">
+            <i class="fas fa-indian-rupee-sign"></i>
+            <input type="number" id="s-price" placeholder="Sell price (₹)" required min="0" step="0.01" oninput="calcTotal()"/>
+          </div>
+          <div class="sale-total-preview" id="sale-total-preview">
+            <span>Total: </span><strong id="sale-total-val">₹0</strong>
+            <span> | Profit: </span><strong id="sale-profit-val" class="profit-val">₹0</strong>
+          </div>
+          <div class="input-group full-width">
+            <i class="fas fa-comment"></i>
+            <input type="text" id="s-note" placeholder="Note (optional)"/>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn-secondary" onclick="closeModal('sale-modal')">Cancel</button>
+          <button type="submit" class="btn-primary">Record Sale</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <script type="module" src="app.js"></script>
+  <script>
+    function toggleSidebar() {
+      document.getElementById('sidebar').classList.toggle('open');
+    }
+  </script>
+</body>
+</html>

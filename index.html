@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>StatioSmart — Sign In</title>
+  <link rel="icon" type="image/svg+xml" href="favicon.svg" />
+  <link rel="stylesheet" href="style.css" />
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet"/>
+  <link rel="stylesheet" href="font-awesome-local.css"/>
+</head>
+<body class="auth-body">
+
+  <div class="auth-split">
+    <!-- Left Panel -->
+    <div class="auth-left">
+      <div class="auth-brand">
+        <div class="brand-icon"><i class="fas fa-pen-nib"></i></div>
+        <h1 class="brand-name">StatioSmart</h1>
+        <p class="brand-tagline">Your intelligent stationery companion</p>
+      </div>
+      <div class="auth-illustration">
+        <div class="floating-card fc1"><i class="fas fa-chart-line"></i><span>Sales Up 24%</span></div>
+        <div class="floating-card fc2"><i class="fas fa-boxes"></i><span>142 Products</span></div>
+        <div class="floating-card fc3"><i class="fas fa-robot"></i><span>AI Insights</span></div>
+        <div class="circle-bg c1"></div>
+        <div class="circle-bg c2"></div>
+      </div>
+      <p class="auth-left-footer">Manage inventory · Track sales · Get AI tips</p>
+    </div>
+
+    <!-- Right Panel -->
+    <div class="auth-right">
+      <div class="auth-card">
+        <div class="auth-tabs">
+          <button class="auth-tab active" id="tab-login" onclick="switchTab('login')">Sign In</button>
+          <button class="auth-tab" id="tab-signup" onclick="switchTab('signup')">Sign Up</button>
+        </div>
+
+        <!-- Login Form -->
+        <form id="login-form" class="auth-form" onsubmit="handleLogin(event)">
+          <h2>Welcome back</h2>
+          <p class="form-subtitle">Sign in to your store dashboard</p>
+          <div class="input-group">
+            <i class="fas fa-envelope"></i>
+            <input type="email" id="login-email" placeholder="Email address" required />
+          </div>
+          <div class="input-group">
+            <i class="fas fa-lock"></i>
+            <input type="password" id="login-password" placeholder="Password" required />
+            <button type="button" class="toggle-pw" onclick="togglePw('login-password')"><i class="fas fa-eye"></i></button>
+          </div>
+          <div class="form-row">
+            <label class="checkbox-label"><input type="checkbox"/> Remember me</label>
+            <a href="#" class="forgot-link">Forgot password?</a>
+          </div>
+          <button type="submit" class="btn-primary" id="login-btn">
+            <span>Sign In</span><i class="fas fa-arrow-right"></i>
+          </button>
+          <div class="divider"><span>or continue with</span></div>
+          <button type="button" class="btn-google" onclick="handleGoogleLogin()">
+            <img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg" alt="Google"/>
+            Sign in with Google
+          </button>
+          <div id="login-error" class="form-error"></div>
+        </form>
+
+        <!-- Signup Form -->
+        <form id="signup-form" class="auth-form hidden" onsubmit="handleSignup(event)">
+          <h2>Create account</h2>
+          <p class="form-subtitle">Start managing your shop today</p>
+          <div class="input-group">
+            <i class="fas fa-store"></i>
+            <input type="text" id="signup-shop" placeholder="Shop name" required />
+          </div>
+          <div class="input-group">
+            <i class="fas fa-user"></i>
+            <input type="text" id="signup-name" placeholder="Your name" required />
+          </div>
+          <div class="input-group">
+            <i class="fas fa-envelope"></i>
+            <input type="email" id="signup-email" placeholder="Email address" required />
+          </div>
+          <div class="input-group">
+            <i class="fas fa-lock"></i>
+            <input type="password" id="signup-password" placeholder="Password (min 6 chars)" required minlength="6"/>
+            <button type="button" class="toggle-pw" onclick="togglePw('signup-password')"><i class="fas fa-eye"></i></button>
+          </div>
+          <button type="submit" class="btn-primary" id="signup-btn">
+            <span>Create Account</span><i class="fas fa-arrow-right"></i>
+          </button>
+          <div class="divider"><span>or continue with</span></div>
+          <button type="button" class="btn-google" onclick="handleGoogleLogin()">
+            <img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg" alt="Google"/>
+            Sign up with Google
+          </button>
+          <div id="signup-error" class="form-error"></div>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <!-- Firebase -->
+  <script type="module" src="auth.js"></script>
+  <script>
+    function switchTab(tab) {
+      document.getElementById('login-form').classList.toggle('hidden', tab !== 'login');
+      document.getElementById('signup-form').classList.toggle('hidden', tab !== 'signup');
+      document.getElementById('tab-login').classList.toggle('active', tab === 'login');
+      document.getElementById('tab-signup').classList.toggle('active', tab === 'signup');
+    }
+    function togglePw(id) {
+      const inp = document.getElementById(id);
+      inp.type = inp.type === 'password' ? 'text' : 'password';
+    }
+  </script>
+</body>
+</html>
